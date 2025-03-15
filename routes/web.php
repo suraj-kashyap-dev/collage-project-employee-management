@@ -24,7 +24,6 @@ Route::get('/dashboard', function () {
     return redirect()->route('super.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::middleware('superadmin')->prefix('super')->group( function () {
     Route::get('/', [AdminController::class, 'index'])->name('super.dashboard');
     Route::get('/sample', [AdminController::class, 'sample'])->name('view.sample');
@@ -49,12 +48,11 @@ Route::middleware('superadmin')->prefix('super')->group( function () {
     Route::post('/calculate', [PayrollController::class, 'calculatePayroll'])->name('calculate.payroll');
     Route::get('/sheet-report', [PayrollController::class, 'sheetReport'])->name('payroll.report');
     Route::post('/generate', [PayrollController::class, 'generateReport'])->name('generate.payroll');
-
-
 });
 
 Route::middleware('admin')->prefix('admin')->group( function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+
     Route::prefix('department')->group(function() {
         Route::get('/', [DepartmentController::class, 'index'])->name('admin.department.index');
         Route::get('/create', [DepartmentController::class, 'create'])->name('admin.department.create');
@@ -63,6 +61,7 @@ Route::middleware('admin')->prefix('admin')->group( function () {
         Route::put('/{id}', [DepartmentController::class, 'update'])->name('admin.department.update');
         Route::delete('/{id}', [DepartmentController::class, 'destroy'])->name('admin.department.destroy');
     });
+
     Route::prefix('designation')->group(function() {
         Route::get('/', [DesignationController::class, 'index'])->name('admin.designation.index');
         Route::get('/create', [DesignationController::class, 'create'])->name('admin.designation.create');
@@ -71,6 +70,7 @@ Route::middleware('admin')->prefix('admin')->group( function () {
         Route::put('/{id}', [DesignationController::class, 'update'])->name('admin.designation.update');
         Route::delete('/{id}', [DesignationController::class, 'destroy'])->name('admin.designation.destroy');
     });
+
     Route::prefix('employee')->group(function() {
         Route::get('/', [EmployeeController::class, 'index'])->name('admin.employee.index');
         Route::get('/create', [EmployeeController::class, 'create'])->name('admin.employee.create');
@@ -79,6 +79,7 @@ Route::middleware('admin')->prefix('admin')->group( function () {
         Route::put('/{id}', [EmployeeController::class, 'update'])->name('admin.employee.update');
         Route::delete('/{id}', [EmployeeController::class, 'destroy'])->name('admin.employee.destroy');
     });
+
     Route::prefix('schedule')->group(function() {
         Route::get('/', [ScheduleController::class, 'index'])->name('admin.schedule.index');
         Route::get('/create', [ScheduleController::class, 'create'])->name('admin.schedule.create');
@@ -87,11 +88,11 @@ Route::middleware('admin')->prefix('admin')->group( function () {
         Route::put('/{id}', [ScheduleController::class, 'update'])->name('admin.schedule.update');
         Route::delete('/{id}', [ScheduleController::class, 'destroy'])->name('admin.schedule.destroy');
     });
-    // Route::prefix('attendance')->group(function() {
-        Route::get('/attendance', [AttendanceController::class, 'index'])->name('admin.attendance.index');
-        Route::post('/check', [CheckController::class, 'CheckStore'])->name('admin.check.store');
-        Route::get('/report', [CheckController::class, 'sheetReport'])->name('admin.sheet.report');
-    // });
+
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('admin.attendance.index');
+    Route::post('/check', [CheckController::class, 'CheckStore'])->name('admin.check.store');
+    Route::get('/report', [CheckController::class, 'sheetReport'])->name('admin.sheet.report');
+
     Route::prefix('leaves')->group(function() {
         Route::get('/', [LeaveController::class, 'index'])->name('admin.leaves.index');
         Route::get('/create', [LeaveController::class, 'create'])->name('admin.leaves.create');
@@ -100,7 +101,7 @@ Route::middleware('admin')->prefix('admin')->group( function () {
         Route::put('/{id}', [LeaveController::class, 'update'])->name('admin.leaves.update');
         Route::delete('/{id}', [LeaveController::class, 'destroy'])->name('admin.leaves.destroy');
     });
-    // Route::resource('users',UserController::class );
+
     Route::prefix('users')->group(function() {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/create', [UserController::class, 'create'])->name('admin.users.create');
