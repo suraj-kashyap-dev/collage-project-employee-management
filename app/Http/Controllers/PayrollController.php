@@ -13,11 +13,9 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
         $employees = Employee::all();
-       // Calculate salary for each employee based on attendance and formulas
-       return view('admin.payroll.index', ['employees' => $employees]);
-       
+
+        return view('admin.payroll.index', ['employees' => $employees]);
     }
 
     /**
@@ -25,18 +23,17 @@ class PayrollController extends Controller
      */
     public function create()
     {
-    
-         // Fetch employees and dates from your data source
-    $employees = Employee::all(); // Replace 'Employee' with your actual model class
-    $today =today();
-    $dates = [];
+        $employees = Employee::all();
 
-    for ($i = 1; $i <= $today->daysInMonth; ++$i) {
-        $dates[] = $i;
-    }
-    
-    return view('admin.payroll.create', compact('employees','dates'));
+        $today =today();
+
+        $dates = [];
+
+        for ($i = 1; $i <= $today->daysInMonth; ++$i) {
+            $dates[] = $i;
+        }
         
+        return view('admin.payroll.create', compact('employees','dates'));
     }
 
     /**
@@ -72,103 +69,67 @@ class PayrollController extends Controller
         // return redirect()->back()->with('success', 'Payroll data has been saved successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Payroll $payroll)
-    {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Payroll $payroll)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Payroll $payroll)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Payroll $payroll)
-    {
-        //
-    }
-
     public function grossSalary() {
         $employees = Employee::all();
+
         return view('admin.payroll.gross', compact('employees'));
     }
 
     public function calculatePayroll(Request $request) {
-        // dd($request);
         if (isset($request->payroll)) {
             foreach ($request->payroll as $employeeId => $payrollData) {
-                // Get the current year and month
                 $currentYear = date('Y');
                 $currentMonth = date('m');
                 
-                // foreach ($payrollData as $year => $yearData) {
-                    // foreach ($yearData as $month => $payrollFields) {
-                        if ($employee = Employee::whereId($employeeId)->first()) {
-                            $data = new Payroll();
-                            $data->employee_id = $employeeId;
-                            
-                            // Use the current year and month for the entry
-                            $data->year = $currentYear;
-                            $data->month = $currentMonth;
-                            
-                            // Process individual payroll fields
-                            // $data->basic = $payrollFields['basic'];
-                            // $data->house_rent = $payrollFields['house_rent'];
-                            // $data->medical = $payrollFields['medical'];
-                            $data->basic = $payrollData['basic'];
-                            $data->house_rent = $payrollData['house_rent'];
-                            $data->medical = $payrollData['medical'];
-                            $data->transport = $payrollData['transport'];
-                            $data->phone_bill = $payrollData['phone_bill'];
-                            $data->internet_bill = $payrollData['internet_bill'];
-                            $data->special = $payrollData['special'];
-                            // $data->bonus = $payrollData['bonus'];
-                            $data->days_present = $payrollData['days_present'];
-                            $data->days_absent = $payrollData['days_absent'];
-                            $data->gross_salary = $payrollData['gross_salary'];
-                            $data->provident_fund = $payrollData['provident_fund'];
-                            // $data->advanced = $payrollData['advanced'];
-                            $data->income_tax = $payrollData['income_tax'];
-                            $data->life_insurance = $payrollData['life_insurance'];
-                            $data->health_insurance = $payrollData['health_insurance'];
-                            $data->deduction = $payrollData['deduction'];
-                            $data->net_salary = $payrollData['net_salary'];
-                            // Add more fields as needed
-                            
-                            // Additional salary calculation logic can be added here
-                            
-                            $data->save();
-                        }
-                    // }
-                // }
+                if (Employee::whereId($employeeId)->first()) {
+                    $data = new Payroll();
+                    $data->employee_id = $employeeId;
+                    
+                    $data->year = $currentYear;
+                    $data->month = $currentMonth;
+                    
+                    $data->basic = $payrollData['basic'];
+                    $data->house_rent = $payrollData['house_rent'];
+                    $data->medical = $payrollData['medical'];
+                    $data->transport = $payrollData['transport'];
+                    $data->phone_bill = $payrollData['phone_bill'];
+                    $data->internet_bill = $payrollData['internet_bill'];
+                    $data->special = $payrollData['special'];
+                    $data->days_present = $payrollData['days_present'];
+                    $data->days_absent = $payrollData['days_absent'];
+                    $data->gross_salary = $payrollData['gross_salary'];
+                    $data->provident_fund = $payrollData['provident_fund'];
+                    $data->income_tax = $payrollData['income_tax'];
+                    $data->life_insurance = $payrollData['life_insurance'];
+                    $data->health_insurance = $payrollData['health_insurance'];
+                    $data->deduction = $payrollData['deduction'];
+                    $data->net_salary = $payrollData['net_salary'];
+                    
+                    $data->save();
+                }
             }
         }
+
         return back();
     }
 
     public function sheetReport()
     {
         $employees = Employee::all();
+
         $months = [
             1 => 'January',
             2 => 'February',
-            // ... Define months for all 12 months
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
         ];
 
         return view('admin.payroll.report', compact('employees', 'months'));
@@ -188,16 +149,6 @@ class PayrollController extends Controller
                 ->get();
         }
 
-        // if ($selectedYear && $selectedMonth) {
-        //     $salaryData = Payroll::whereYear('year', $selectedYear)
-        //         ->whereMonth('month', $selectedMonth)
-        //         ->with('employee') // Load the employee relationship
-        //         ->get();
-    
-        //     return view('admin.payroll.report', compact('salaryData', 'selectedYear', 'selectedMonth'));
-        // }
-    
-        // return view('admin.payroll.report');
 
         return view('admin.payroll.report', compact('employees', 'selectedYear', 'selectedMonth', 'salaryData'));
     }

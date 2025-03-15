@@ -13,8 +13,8 @@ class DesignationController extends Controller
      */
     public function index()
     {
-        //
         $designations = Designation::all();
+
         return view('admin.designation.index', compact('designations'));
     }
 
@@ -23,7 +23,6 @@ class DesignationController extends Controller
      */
     public function create()
     {
-        //
         return view('admin.designation.create');
     }
 
@@ -32,17 +31,9 @@ class DesignationController extends Controller
      */
     public function store(StoreDesignationRequest $request)
     {
-        //
         Designation::create($request->all());
+ 
         return back()->with('success', 'Designation created successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Designation $designation)
-    {
-        //
     }
 
     /**
@@ -50,7 +41,6 @@ class DesignationController extends Controller
      */
     public function edit($id)
     {
-        //
         $designation = Designation::findOrFail($id);
 
         return view('admin.designation.edit', compact('designation'));
@@ -61,8 +51,8 @@ class DesignationController extends Controller
      */
     public function update(UpdateDesignationRequest $request, Designation $designation)
     {
-        //
         $designation->update($request->all());
+
         return back()->with('success', 'Designation updated successfully!');
     }
 
@@ -71,8 +61,8 @@ class DesignationController extends Controller
      */
     public function destroy(Designation $designation)
     {
-        //
         $designation->delete();
+
         return back()->with('success', 'Designation deleted successfully!');
     }
 }

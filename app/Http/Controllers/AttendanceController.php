@@ -14,8 +14,8 @@ class AttendanceController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        // $attendances = Attendance::all();
         $employees = Employee::all();
+
         return view('admin.attendance.index', compact('employees'));
     }
 
@@ -24,8 +24,8 @@ class AttendanceController extends Controller {
      */
     public function create()
     {
-        //
         $employees = Employee::all();
+
         return view('admin.attendance.create', compact('employees'));
     }
 
@@ -34,28 +34,22 @@ class AttendanceController extends Controller {
      */
     public function store(StoreAttendanceRequest $request)
     {
-        //
         Attendance::create($request->all());
+
         return back()->with('success', 'user crated successfully');
        
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Attendance $attendance)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
-        //
         $attendance = Attendance::findOrFail($id);
+
         $employees = Employee::all();
+
         return view('admin.attendance.edit', compact(['employees', 'attendance']));
     }
 
@@ -64,8 +58,8 @@ class AttendanceController extends Controller {
      */
     public function update(UpdateAttendanceRequest $request, Attendance $attendance)
     {
-        //
         $attendance->update($request->all());
+
         return back()->with('success', 'user updated successfully');
     }
 
@@ -74,9 +68,9 @@ class AttendanceController extends Controller {
      */
     public function destroy(Attendance $attendance)
     {
-        //
-        // $attendance->delete();
-        // return back()->with('success', 'user deleted successfully');
+        $attendance->delete();
+
+        return back()->with('success', 'user deleted successfully');
     }
 
     public function report(Attendance $attendance, Request $request) {
@@ -97,7 +91,6 @@ class AttendanceController extends Controller {
             ];
            
             
-            // $attendances = $employee->attendances->where('date', 'like', "$year-$month%");
             $attendances = $employee->attendances->filter(function ($attendance) use ($year, $month)
              {
                 return Carbon::parse($attendance->date)->year == $year &&
@@ -118,19 +111,7 @@ class AttendanceController extends Controller {
             $day = $date->day;
         }
 
-        // $attendanceData = Employee::select('employees.firstname', 'employees.lastname', 'attendances.date', 'attendances.checkin_time')
-        //     ->leftJoin('attendances', function ($join) use ($year, $month) {
-        //         $join->on('employees.id', '=', 'attendances.employee_id')
-        //             ->whereYear('attendances.date', $year)
-        //             ->whereMonth('attendances.date', $month);
-        //     })
-        //     ->orderBy('employees.firstname')
-        //     ->orderBy('attendances.date')
-        //     ->get();
-
         return view('admin.attendance.report', compact('attendance', 'employees', 'daysInMonth', 'userAttendanceData', 'date'));
-        // return view('admin.attendance.report');
-    // }
     }
 
     public function barcode() {

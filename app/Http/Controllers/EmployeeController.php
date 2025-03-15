@@ -17,8 +17,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
         $employees = Employee::all();
+
         return view('admin.employee.index',compact('employees'));
     }
 
@@ -27,10 +27,12 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
         $departments = Department::all();
+
         $designations = Designation::all();
+
         $schedules = Schedule::all();
+
         return view('admin.employee.create', compact('departments', 'designations', 'schedules'));
     }
 
@@ -39,12 +41,14 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        //
         $employee = Employee::create($request->all());
+
         if($employee) {
             $salary = new Salary($request->all());
+
             $employee->salary()->save($salary);
         }
+
         return back()->with('success', 'Employee created successfully.');
     }
 
@@ -53,13 +57,15 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
         $employee = Employee::findOrFail($id);
+
         $departments = Department::all();
+
         $designations = Designation::all();
+
         $schedules = Schedule::all();
+
         return view('admin.employee.show',compact('employee', 'departments', 'designations', 'schedules'));
-        
     }
 
     /**
@@ -67,11 +73,14 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
         $employee = Employee::findOrFail($id);
+
         $departments = Department::all();
+
         $designations = Designation::all();
+
         $schedules = Schedule::all();
+
         return view('admin.employee.edit',compact('employee', 'departments', 'designations', 'schedules'));
     }
 
@@ -80,13 +89,14 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
         $employee->update($request->all());
+
         $salary = $employee->salary ?: new Salary();
+
         $salary->fill($request->all());
+
         $employee->salary()->save($salary);
 
-        // return Redirect::route('admin.employee.edit')->with('success', 'Employee updated successfully');
         return back()->with('success', 'Employee updated successfully');
     }
 
@@ -95,8 +105,8 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
         $employee->delete();
+
         return back()->with('success','Employee deleted successfully');
     }
 }
